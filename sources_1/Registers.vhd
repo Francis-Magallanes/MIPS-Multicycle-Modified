@@ -25,6 +25,7 @@ architecture Behavioral of Registers is
     signal Reg: registers_type := (
         
         0 => x"00000000",
+        9 => x"000001FF", -- contains the location of the load word which is 511 , (see the ram)
         16 => x"00000028", -- a part
         17 => x"0000011E", -- b part
         

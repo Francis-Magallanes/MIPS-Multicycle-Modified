@@ -71,6 +71,7 @@ end component;
 component Memory is
     Port ( 
             --Input
+           clk      : in STD_LOGIC;
            address  : in STD_LOGIC_VECTOR (31 downto 0); 
            datain   : in STD_LOGIC_VECTOR (31 downto 0);
            memwrite : in STD_LOGIC;
@@ -286,8 +287,9 @@ begin
          );
 
         RAM: Memory port map( 
+           clk      => clk,
            address  => address_memory,
-           datain   => datain_memory, --data for the writing
+           datain   => output_breg, --data for the writing
            memwrite => memwrite_controlunit,
            memread  => memread_controlunit,
            dataout  => input_ir -- results of the reading

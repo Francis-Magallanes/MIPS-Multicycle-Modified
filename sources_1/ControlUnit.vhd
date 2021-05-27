@@ -198,7 +198,7 @@ begin
                      RegDst <= '0';
                      RegWrite <= '0';
                      ALUSrcA <= '0';
-                     ALUSrcB <= "00";
+                     ALUSrcB <= "01"; -- this should be one (PC + 4) to avoid conflict during the fetch cycle of the next instruction
                      ALUOp <= "00"; --addition
                      PCSource <= "00";
                      controlunit_state <= InstructionFetch; --proceed to the next instruction
@@ -244,7 +244,7 @@ begin
                     MemWrite <= '0';
                     MemtoReg <= '1';
                     IRWrite <= '0';
-                    RegDst <= '1';
+                    RegDst <= '0';
                     RegWrite <= '1';
                     ALUSrcA <= '0';
                     ALUSrcB <= "00";
@@ -344,7 +344,7 @@ begin
                     MemWrite <= '0';
                     MemtoReg <= '0';
                     IRWrite <= '0';
-                    RegDst <= '1';
+                    RegDst <= '0';
                     RegWrite <= '1';
                     ALUSrcA <= '0';
                     ALUSrcB <= "00";

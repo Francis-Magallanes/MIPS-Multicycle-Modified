@@ -27,6 +27,15 @@ begin
   uut: MIPS_Connected port map ( reset => reset,
                                  clk   => clk );
 
+  --- STATUS CHECK ON THE TESTING OF THE INSTRUCTION
+  --- beq  : pass 
+  --- add  : pass
+  --- sub  : pass
+  --- addi : pass
+  --- lw   : pass
+  --- sw   :
+  --- slt  :
+  --- j    : 
   stimulus: process
   begin
   

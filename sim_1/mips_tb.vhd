@@ -33,9 +33,9 @@ begin
   --- sub  : pass
   --- addi : pass
   --- lw   : pass
-  --- sw   :
-  --- slt  :
-  --- j    : 
+  --- sw   : pass
+  --- slt  : pass
+  --- j    : pass
   stimulus: process
   begin
   

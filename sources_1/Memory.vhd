@@ -82,8 +82,8 @@ type storage is array (1024 downto 0) of std_logic_vector(7 downto 0);
 --  Expected Output: mem(511) = 0xFA (based on the contents of ram)
 
 --j 0x30                        , (mem loc start: 44)
---  Binary Equivalent: 000010 (op), 00 0000 0000 0000 0000 0000 1011 (address)
---  Hexadecimal Equivalent: 0000-1000-0000-0000-0000-0000-0000-1011 => 0x0800000B
+--  Binary Equivalent: 000010 (op), 00 0000 0000 0000 0000 0000 1100 (address)
+--  Hexadecimal Equivalent: 0000-1000-0000-0000-0000-0000-0000-1100 => 0x0800000C
 --  Expected Output: PC counter will be at 0d44 forever
 
 
@@ -151,7 +151,7 @@ signal sig_storage : storage := (
     48 => x"08", --j 0x30 
     49 => x"00",
     50 => x"00",
-    51 => x"0B",
+    51 => x"0C",
  
     512 =>x"FA", --this value will be loaded to $s4
     others => ( others=> '0')

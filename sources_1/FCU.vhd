@@ -6,9 +6,9 @@ use IEEE.NUMERIC_STD.ALL;
 
 
 entity FCU is
-    Port ( input : in STD_LOGIC_VECTOR (31 downto 0);
-           hi : out STD_LOGIC_VECTOR (31 downto 0) :=  (others => 'Z');
-           lo : out STD_LOGIC_VECTOR (31 downto 0) :=  (others => 'Z');
+    Port ( input      : in STD_LOGIC_VECTOR (31 downto 0);
+           hi         : out STD_LOGIC_VECTOR (31 downto 0) :=  (others => 'Z');
+           lo         : out STD_LOGIC_VECTOR (31 downto 0) :=  (others => 'Z');
            enable_out : in STD_LOGIC);
 end FCU;
 

@@ -67,6 +67,17 @@ component ALU is
      );
 end component;
 
+--for the multiplication and division
+component MultiAndDiv is
+  Port ( 
+    input   : in unsigned(31 downto 0);
+    input2  : in unsigned(31 downto 0);
+    sel     : in STD_LOGIC;
+    EnOut   : in STD_LOGIC;
+    output  : out STD_LOGIC_VECTOR(63 downto 0)  
+  );
+end component;
+
 --for the data memory
 component Memory is
     Port ( 

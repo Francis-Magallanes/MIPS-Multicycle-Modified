@@ -5,14 +5,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity HoLoRegisters is
     Port ( 
         --input
-        clk     : in STD_LOGIC;
-        ho_data_in : in STD_LOGIC_VECTOR(31 downto 0);
-        lo_data_in : in STD_LOGIC_VECTOR(31 downto 0);
+        clk         : in STD_LOGIC;
+        ho_data_in  : in STD_LOGIC_VECTOR(31 downto 0);
+        lo_data_in  : in STD_LOGIC_VECTOR(31 downto 0);
 
 
         --output
-        ho_data_out: out STD_LOGIC_VECTOR(31 downto 0);
-        lo_data_out: out STD_LOGIC_VECTOR(31 downto 0)
+        ho_data_out : out STD_LOGIC_VECTOR(31 downto 0);
+        lo_data_out : out STD_LOGIC_VECTOR(31 downto 0)
         );
 end HoLoRegisters;
 

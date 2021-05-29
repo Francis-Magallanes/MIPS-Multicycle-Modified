@@ -81,10 +81,35 @@ type storage is array (1024 downto 0) of std_logic_vector(7 downto 0);
 --  Hexadecimal Equivalent: 1010-1101-0011-0100-0000-0000-0000-0000 => 0xAD340000
 --  Expected Output: mem(511) = 0xFA (based on the contents of ram)
 
---j 0x30                        , (mem loc start: 44)
---  Binary Equivalent: 000010 (op), 00 0000 0000 0000 0000 0000 1100 (address)
---  Hexadecimal Equivalent: 0000-1000-0000-0000-0000-0000-0000-1100 => 0x0800000C
---  Expected Output: PC counter will be at 0d44 forever
+-- multu $t2,$t3                 , (mem loc start: 48)
+-- Binary Equivalent: 000000 (op),  01010 (rs), 01011 (rt), 00000 00000, 011001 (funct)
+-- Hexadecimal Equivalent: 0000-0001-0100-1011-0000-0000-0001-1001 => 0x014B0019
+-- Expected Output: HI: 0x00000000, LO : 0x00000019
+
+--divu $t2,$t3                   , (mem loc start: 52)
+-- Binary Equivalent: 000000 (op),  01010 (rs), 01011 (rt), 00000 00000, 011011 (funct)
+-- Hexadecimal Equivalent: 0000-0001-0100-1011-0000-0000-0001-1011 => 0x014B001B
+-- Expected Output: HI: 0x00000000, LO : 0x00000001
+
+--fac $t2                       , (mem loc start: 56)
+-- Binary Equivalent: 000000 (op),  01010 (rs), 0000-0000-0000-000, 011100 (funct)
+-- Hexadecimal Equivalent:  0000-0001-0100-0000-0000-0000-0001-1100 => 0x0140001C
+-- Expected Output: HI: 0x00000000, LO : 0x00000078
+
+--mfhi $t4                      , (mem loc start: 60)
+-- Binary Equivalent: 000000(op), 0000000000 (rs), 01100 (rd), 00000, 010000
+-- Hexadecimal Equivalent: 0000-0000-0000-0000-0110-0000-0001-0000 => 0x00006010
+-- Expected Output $t4 = 0x00000000
+
+--mflo $t5                      , (mem loc start: 64)
+-- Binary Equivalent: 000000(op), 0000000000 (rs), 01101 (rd), 00000, 010010
+-- Hexadecimal Equivalent: 0000-0000-0000-0000-0110-1000-0001-0010 => 0x00006812
+-- Expected Output $t5 = 0x00000078
+
+--j 0x44                        , (mem loc start: 68)
+--  Binary Equivalent: 000010 (op), 00 0000 0000 0000 0000 0001 0001 (address)
+--  Hexadecimal Equivalent: 0000-1000-0000-0000-0000-0000-0001-0001 => 0x08000011
+--  Expected Output: PC counter will be at 0d68 forever
 
 
 signal sig_storage : storage := (
@@ -148,11 +173,32 @@ signal sig_storage : storage := (
     46 => x"00",
     47 => x"00",
     
-    48 => x"08", --j 0x30 
-    49 => x"00",
+    48 => x"01", --multu $t2,$t3
+    49 => x"4B",
     50 => x"00",
-    51 => x"0C",
- 
+    51 => x"19",
+    
+    52 => x"01", -- divu $t2,$3
+    53 => x"4B",
+    54 => x"00",
+    55 => x"1B",
+    
+    56 => x"01", --fac $t2
+    57 => x"40",
+    58 => x"00",
+    59 => x"1C",
+    
+    60 => x"00", --mfhi $t4
+    61 => x"00",
+    62 => x"60",
+    63 => x"10",
+    
+    64 => x"00", -- mflo $t5
+    65 => x"00",
+    66 => x"68",
+    67 => x"12",
+    
+    
     512 =>x"FA", --this value will be loaded to $s4
     others => ( others=> '0')
 );

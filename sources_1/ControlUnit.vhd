@@ -281,7 +281,7 @@ begin
                     RegWrite <= '1';
                     ALUSrcA <= '0';
                     ALUSrcB <= "00";
-                    ALUOp <= "00"; --addition
+                    ALUOp <= "10";
                     PCSource <= "00";
                     controlunit_state <= InstructionFetch;
                  

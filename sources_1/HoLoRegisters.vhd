@@ -8,7 +8,7 @@ entity HoLoRegisters is
         clk         : in STD_LOGIC;
         ho_data_in  : in STD_LOGIC_VECTOR(31 downto 0);
         lo_data_in  : in STD_LOGIC_VECTOR(31 downto 0);
-
+        enable_in : STD_LOGIC;
 
         --output
         ho_data_out : out STD_LOGIC_VECTOR(31 downto 0);
@@ -25,7 +25,7 @@ begin
 
     process(clk,ho_data_in,lo_data_in)
     begin
-        if rising_edge(clk) then
+        if rising_edge(clk) and enable_in = '1' then
             ho_data_reg <= ho_data_in;
             lo_data_reg <= lo_data_in;
         end if;

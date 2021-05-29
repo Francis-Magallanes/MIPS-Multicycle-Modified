@@ -39,9 +39,9 @@ begin
             counter:= counter + 1;
             
         end loop;
+        result := to_unsigned(counter,64);
     end if;
     
-    result := to_unsigned(counter,64);
     Transfer <= STD_LOGIC_VECTOR(result);
     
     end process;

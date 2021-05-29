@@ -198,6 +198,10 @@ signal sig_storage : storage := (
     66 => x"68",
     67 => x"12",
     
+    68 => x"08", -- j 0x44
+    69 => x"00",
+    70 => x"00",
+    71 => x"11",
     
     512 =>x"FA", --this value will be loaded to $s4
     others => ( others=> '0')

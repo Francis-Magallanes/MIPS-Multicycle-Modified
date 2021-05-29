@@ -86,9 +86,9 @@ end component;
 -- factorial computation unit
 component FCU is
     Port ( input      : in STD_LOGIC_VECTOR (31 downto 0);
-           hi         : out STD_LOGIC_VECTOR (31 downto 0) :=  (others => 'Z');
-           lo         : out STD_LOGIC_VECTOR (31 downto 0) :=  (others => 'Z');
-           enable_out : in STD_LOGIC);
+           enable_out : in STD_LOGIC;
+           output     : out std_logic_vector(63 downto 0)
+           );
 end component;
 
 --for the data memory
@@ -433,29 +433,29 @@ begin
       );
      
      alucontrol_comp :  ALUControl port map(
-          ALUOp      => aluop_controlunit,
-          ALU_Funct  => output_ir (5 downto 0),
-          ALU_Control=> alucontrol_alu,
-          muldivsel => muldivsel_alucontrol,
-          enableout_fcu => enableout_fcu_alucontrol,
-          enableout_muldiv => enableout_muldiv_alucontrol,
-          enablein_hilo => enablein_hilo_alucontrol,
-          aluout_seclector => aluout_seclector_alucontrol
+          ALUOp             => aluop_controlunit,
+          ALU_Funct         => output_ir (5 downto 0),
+          ALU_Control       => alucontrol_alu,
+          muldivsel         => muldivsel_alucontrol,
+          enableout_fcu     => enableout_fcu_alucontrol,
+          enableout_muldiv  => enableout_muldiv_alucontrol,
+          enablein_hilo     => enablein_hilo_alucontrol,
+          aluout_seclector  => aluout_seclector_alucontrol
      );
      
      muldiv_comp : MultiAndDiv port map ( 
-        input   => unsigned(op1_alu),
-        input2  => unsigned(op2_alu),
+        input   => unsigned(output_areg),
+        input2  => unsigned(output_breg),
         sel     => muldivsel_alucontrol,
         EnOut   => enableout_muldiv_alucontrol,
-        output  => output_muldivfcu 
+        output  => output_muldivfcu
         );
         
      fcu_comp : FCU port map ( 
-           input      => op1_alu,
-           hi         => output_muldivfcu(63 downto 32),
-           lo         => output_muldivfcu(31 downto 0),
+           input      => output_areg,
+           output     => output_muldivfcu,
            enable_out => enableout_fcu_alucontrol
+           
       );
      
      hilo_comp : HoLoRegisters port map ( 

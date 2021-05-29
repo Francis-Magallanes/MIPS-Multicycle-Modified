@@ -26,6 +26,10 @@ architecture Behavioral of Registers is
         
         0 => x"00000000",
         9 => x"000001FF", -- contains the location of the load word which is 511 , (see the ram)
+        10 => x"00000005", --for the multiplication, division and factorial testbench
+        11 => x"00000005", --for the multiplication and division
+        12 => x"11111111", --this will overwritten during the mfhi instruction test
+        
         16 => x"00000028", -- a part
         17 => x"0000011E", -- b part
         

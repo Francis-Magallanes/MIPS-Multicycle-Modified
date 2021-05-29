@@ -43,11 +43,16 @@ end component;
 component ALUControl is
 port(
   --input
-  ALUOp      : in std_logic_vector(1 downto 0);
-  ALU_Funct  : in std_logic_vector(5 downto 0);
+  ALUOp             : in std_logic_vector(1 downto 0);
+  ALU_Funct         : in std_logic_vector(5 downto 0);
   
   --output
-  ALU_Control: out std_logic_vector(3 downto 0)
+  ALU_Control       : out std_logic_vector(3 downto 0);
+  muldivsel         : out std_logic; -- it will select whether multiplication of division
+  enableout_fcu     : out std_logic; -- if 1 , output thhe results of the FCU. Otherwise, FCU will output high z
+  enableout_muldiv  : out std_logic;-- if 1 , output thhe results of the mul div. Otherwise, mul div will output high z
+  enablein_hilo     : out std_logic;-- if 1, the inputs of the HI and LO register will be stored. Otherwise, do nothing
+  aluout_seclector  : out std_logic_vector(1 downto 0) -- selects the value to be stored in ALUOut.
 );
 
 end component;
@@ -67,6 +72,25 @@ component ALU is
      );
 end component;
 
+--for the multiplication and division
+component MultiAndDiv is
+  Port ( 
+    input   : in unsigned(31 downto 0);
+    input2  : in unsigned(31 downto 0);
+    sel     : in STD_LOGIC;
+    EnOut   : in STD_LOGIC;
+    output  : out STD_LOGIC_VECTOR(63 downto 0)  
+  );
+end component;
+
+-- factorial computation unit
+component FCU is
+    Port ( input      : in STD_LOGIC_VECTOR (31 downto 0);
+           enable_out : in STD_LOGIC;
+           output     : out std_logic_vector(63 downto 0)
+           );
+end component;
+
 --for the data memory
 component Memory is
     Port ( 
@@ -80,6 +104,21 @@ component Memory is
            --Output
            dataout  : out STD_LOGIC_VECTOR (31 downto 0)
          );
+end component;
+
+--for the ho and lo registers
+component HoLoRegisters is
+    Port ( 
+        --input
+        clk         : in STD_LOGIC;
+        ho_data_in  : in STD_LOGIC_VECTOR(31 downto 0);
+        lo_data_in  : in STD_LOGIC_VECTOR(31 downto 0);
+         enable_in  : STD_LOGIC;
+
+        --output
+        ho_data_out : out STD_LOGIC_VECTOR(31 downto 0);
+        lo_data_out : out STD_LOGIC_VECTOR(31 downto 0)
+        );
 end component;
 
 --for the program counter register
@@ -264,7 +303,21 @@ end component;
   signal  alucontrol_alu : std_logic_vector(3 downto 0); -- function select
   signal  aluresult_alu  : std_logic_vector(31 downto 0); -- ALU Output Result
   signal  zero_alu       : std_logic; -- Zero Flag
+  signal  input_aluout  : std_logic_vector(31 downto 0);
   
+--signals for the alu control
+  signal muldivsel_alucontrol         : std_logic; 
+  signal enableout_fcu_alucontrol     : std_logic;
+  signal enableout_muldiv_alucontrol  : std_logic;
+  signal enablein_hilo_alucontrol     : std_logic;
+  signal aluout_seclector_alucontrol  : std_logic_vector(1 downto 0); 
+ 
+ --signals for the multiplication, division and ho lo
+  signal  output_muldivfcu      : std_logic_vector(63 downto 0);
+
+--signals of hi lo register
+signal output_hi : std_logic_vector(31 downto 0);
+signal output_lo : std_logic_vector(31 downto 0);
 
 begin
         
@@ -380,14 +433,52 @@ begin
       );
      
      alucontrol_comp :  ALUControl port map(
-          ALUOp      => aluop_controlunit,
-          ALU_Funct  => output_ir (5 downto 0),
-          ALU_Control=> alucontrol_alu
+          ALUOp             => aluop_controlunit,
+          ALU_Funct         => output_ir (5 downto 0),
+          ALU_Control       => alucontrol_alu,
+          muldivsel         => muldivsel_alucontrol,
+          enableout_fcu     => enableout_fcu_alucontrol,
+          enableout_muldiv  => enableout_muldiv_alucontrol,
+          enablein_hilo     => enablein_hilo_alucontrol,
+          aluout_seclector  => aluout_seclector_alucontrol
      );
      
+     muldiv_comp : MultiAndDiv port map ( 
+        input   => unsigned(output_areg),
+        input2  => unsigned(output_breg),
+        sel     => muldivsel_alucontrol,
+        EnOut   => enableout_muldiv_alucontrol,
+        output  => output_muldivfcu
+        );
+        
+     fcu_comp : FCU port map ( 
+           input      => output_areg,
+           output     => output_muldivfcu,
+           enable_out => enableout_fcu_alucontrol
+           
+      );
+     
+     hilo_comp : HoLoRegisters port map ( 
+        clk         => clk,
+        ho_data_in  => output_muldivfcu(63 downto 32),
+        lo_data_in  => output_muldivfcu(31 downto 0),
+        enable_in   => enablein_hilo_alucontrol,
+        ho_data_out => output_hi,
+        lo_data_out => output_lo
+        );
+     
+     WriteDataALUOutSelector: MUX4x1 port map ( 
+           input  => aluresult_alu,
+           input2 => output_hi,
+           input3 => output_lo,
+           input4 => x"00000000",
+           sel    => aluout_seclector_alucontrol,
+           output => input_aluout
+     );
+
      aluout_comp : RegAB port map(
             clk      => clk,
-            data_in  => aluresult_alu,
+            data_in  => input_aluout,
             data_out => output_aluout
      );
      

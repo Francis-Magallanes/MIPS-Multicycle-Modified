@@ -36,6 +36,10 @@ begin
   --- sw   : pass
   --- slt  : pass
   --- j    : pass
+  -- multu : pass
+  -- divu  : pass
+  --mfhi   : pass
+  --mflo   : pass
   stimulus: process
   begin
   
